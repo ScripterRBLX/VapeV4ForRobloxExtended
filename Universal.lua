@@ -76,11 +76,11 @@ local function downloadVapeAsset(path)
 			textlabel:Destroy()
 		end)
 		local suc, req = pcall(function() return vapeGithubRequest(path:gsub("vape/assets", "assets")) end)
-        if suc and req then
-		    writefile(path, req)
-        else
-            return ""
-        end
+		if suc and req then
+			writefile(path, req)
+		else
+			return ""
+		end
 	end
 	if not vapeCachedAssets[path] then vapeCachedAssets[path] = getcustomasset(path) end
 	return vapeCachedAssets[path] 
@@ -152,7 +152,7 @@ do
 		if (not lplr.Team) then return true end
 		if (not plr.Team) then return true end
 		if plr.Team ~= lplr.Team then return true end
-        return #plr.Team:GetPlayers() == playersService.NumPlayers
+		return #plr.Team:GetPlayers() == playersService.NumPlayers
 	end
 	entityLibrary.fullEntityRefresh()
 	entityLibrary.LocalPosition = Vector3.zero
@@ -225,17 +225,17 @@ local function EntityNearPosition(distance, checktab)
 		local sortedentities = {}
 		for i, v in pairs(entityLibrary.entityList) do -- loop through playersService
 			if not v.Targetable then continue end
-            if isVulnerable(v) then -- checks
+			if isVulnerable(v) then -- checks
 				local playerPosition = v.RootPart.Position
 				local mag = (entityLibrary.character.HumanoidRootPart.Position - playerPosition).magnitude
 				if checktab.Prediction and mag > distance then
 					mag = (entityLibrary.LocalPosition - playerPosition).magnitude
 				end
-                if mag <= distance then -- mag check
+				if mag <= distance then -- mag check
 					table.insert(sortedentities, {entity = v, Magnitude = v.Target and -1 or mag})
-                end
-            end
-        end
+				end
+			end
+		end
 		table.sort(sortedentities, function(a, b) return a.Magnitude < b.Magnitude end)
 		for i, v in pairs(sortedentities) do 
 			if checktab.WallCheck then
@@ -248,19 +248,19 @@ end
 
 local function EntityNearMouse(distance, checktab)
 	checktab = checktab or {}
-    if entityLibrary.isAlive then
+	if entityLibrary.isAlive then
 		local sortedentities = {}
 		local mousepos = inputService.GetMouseLocation(inputService)
 		for i, v in pairs(entityLibrary.entityList) do
 			if not v.Targetable then continue end
-            if isVulnerable(v) then
+			if isVulnerable(v) then
 				local vec, vis = worldtoscreenpoint(v[checktab.AimPart].Position)
 				local mag = (mousepos - Vector2.new(vec.X, vec.Y)).magnitude
-                if vis and mag <= distance then
+				if vis and mag <= distance then
 					table.insert(sortedentities, {entity = v, Magnitude = v.Target and -1 or mag})
-                end
-            end
-        end
+				end
+			end
+		end
 		table.sort(sortedentities, function(a, b) return a.Magnitude < b.Magnitude end)
 		for i, v in pairs(sortedentities) do 
 			if checktab.WallCheck then
@@ -268,28 +268,28 @@ local function EntityNearMouse(distance, checktab)
 			end
 			return v.entity
 		end
-    end
+	end
 end
 
 local function AllNearPosition(distance, amount, checktab)
 	local returnedplayer = {}
 	local currentamount = 0
 	checktab = checktab or {}
-    if entityLibrary.isAlive then
+	if entityLibrary.isAlive then
 		local sortedentities = {}
 		for i, v in pairs(entityLibrary.entityList) do
 			if not v.Targetable then continue end
-            if isVulnerable(v) then
+			if isVulnerable(v) then
 				local playerPosition = v.RootPart.Position
 				local mag = (entityLibrary.character.HumanoidRootPart.Position - playerPosition).magnitude
 				if checktab.Prediction and mag > distance then
 					mag = (entityLibrary.LocalPosition - playerPosition).magnitude
 				end
-                if mag <= distance then
+				if mag <= distance then
 					table.insert(sortedentities, {entity = v, Magnitude = mag})
-                end
-            end
-        end
+				end
+			end
+		end
 		table.sort(sortedentities, function(a, b) return a.Magnitude < b.Magnitude end)
 		for i,v in pairs(sortedentities) do 
 			if checktab.WallCheck then
@@ -517,7 +517,7 @@ runFunction(function()
 								thing.Parent = RadarMainFrame
 								radartable[plr] = thing
 							end
-							
+
 							local v238, v239 = radargameCamera:WorldToViewportPoint((CFrame.new(0, 0, 0):inverse() * plr.RootPart.CFrame).p * 0.2)
 							thing.Visible = true
 							thing.BackgroundColor3 = getPlayerColor(plr.Player) or Color3.fromHSV(RadarColor.Value, 1, 1)
@@ -1255,7 +1255,7 @@ runFunction(function()
 	local s = 0
 	local a = 0
 	local d = 0
-	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B", "AntiCheat C", "AntiCheat D"}
+	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B", "AntiCheat C", "AntiCheat D", "AntiCheat E"}
 	Fly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = "Fly", 
 		Function = function(callback)
@@ -1363,7 +1363,7 @@ runFunction(function()
 									FlyJumpCFrame = entityLibrary.character.HumanoidRootPart.CFrame * CFrame.new(0, -entityLibrary.character.Humanoid.HipHeight, 0)
 									entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 								end
-							else
+							elseif FlyMethod.Value == "FjAnticheat" then
 								if FlyTPTick <= tick() then 
 									FlyTP = not FlyTP
 									if FlyTP then
@@ -1381,6 +1381,20 @@ runFunction(function()
 									entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(entityLibrary.character.HumanoidRootPart.CFrame.p, entityLibrary.character.HumanoidRootPart.CFrame.p + gameCamera.CFrame.lookVector)
 									entityLibrary.character.HumanoidRootPart.RotVelocity = Vector3.zero
 								end
+							else
+								if FlyTPTick <= tick() then 
+									FlyTP = not FlyTP
+									if FlyTP then
+										if FlyTPY then FlyY = FlyTPY end
+									else
+										FlyTPY = FlyY
+										FlyRaycast.FilterDescendantsInstances = {lplr.Character, gameCamera}
+										local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -10000, 0), FlyRaycast)
+										if ray then FlyY = ray.Position.Y + ((entityLibrary.character.HumanoidRootPart.Size.Y / 2) + entityLibrary.character.Humanoid.HipHeight) end
+									end
+									FlyTPTick = tick() + ((FlyTP and 10 or 0.1) / 10)
+								end
+								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + newMovementPosition
 							end
 						end
 						if FlyPlatform then
@@ -1417,7 +1431,7 @@ runFunction(function()
 	})
 	FlyMethod = Fly.CreateDropdown({
 		Name = "Mode", 
-		List = {"Normal", "CFrame", "Jump", "TP", "Bounce"},
+		List = {"Normal", "CFrame", "Jump", "TP", "Bounce", "FjAnticheat"},
 		Function = function(val)
 			FlyY = nil
 			if FlyTPOn.Object then FlyTPOn.Object.Visible = val == "TP" end
@@ -1623,10 +1637,12 @@ runFunction(function()
 	local KillauraButtonDown = {Enabled = false}
 	local KillauraTargetHighlight = {Enabled = false}
 	local KillauraRangeCircle = {Enabled = false}
+	local KillauraTP = {Value = false}
 	local KillauraRangeCirclePart
 	local KillauraSwingTick = tick()
 	local KillauraBoxes = {}
 	local OriginalNeckC0
+	local last = nil
 	local OriginalRootC0
 	for i = 1, 10 do 
 		local KillauraBox = Instance.new("BoxHandleAdornment")
@@ -1702,6 +1718,10 @@ runFunction(function()
 										KillauraNearTarget = true
 										if KillauraPrediction.Enabled then
 											if (entityLibrary.LocalPosition - v.RootPart.Position).Magnitude > KillauraRange.Value then
+												if KillauraTP.Value == true then
+													last = entityLibrary.character.HumanoidRootPart.CFrame
+													entityLibrary.character.HumanoidRootPart.CFrame = v.RootPart.CFrame
+												end
 												continue
 											end
 										end
@@ -1727,6 +1747,10 @@ runFunction(function()
 											firetouchinterest(touch.Parent, v.RootPart, 1)
 											firetouchinterest(touch.Parent, v.RootPart, 0)
 										end
+										if KillauraTP.Value == true then
+											task.wait(0.2)
+											entityLibrary.character.HumanoidRootPart.CFrame = last
+										end
 									end
 								end
 							end
@@ -1740,7 +1764,7 @@ runFunction(function()
 				end)
 			else
 				RunLoops:UnbindFromHeartbeat("Killaura") 
-                KillauraNearTarget = false
+				KillauraNearTarget = false
 				vapeTargetInfo.Targets.Killaura = nil
 				for i,v in pairs(KillauraBoxes) do v.Adornee = nil end
 				if KillauraRangeCirclePart then KillauraRangeCirclePart.Parent = nil end
@@ -1794,19 +1818,24 @@ runFunction(function()
 		Function = function() end
 	})
 	KillauraTarget = Killaura.CreateToggle({
-        Name = "Show target",
-        Function = function(callback) end,
+		Name = "Show target",
+		Function = function(callback) end,
 		HoverText = "Shows a red box over the opponent."
-    })
+	})
+	KillauraTP = Killaura.CreateToggle({
+		Name = "TPAura",
+		Function = function(callback) end,
+		HoverText = "TP, attack and go back."
+	})
 	KillauraPrediction = Killaura.CreateToggle({
 		Name = "Prediction",
 		Function = function() end
 	})
 	KillauraFakeAngle = Killaura.CreateToggle({
-        Name = "Face target",
-        Function = function() end,
+		Name = "Face target",
+		Function = function() end,
 		HoverText = "Makes your character face the opponent."
-    })
+	})
 	KillauraRangeCircle = Killaura.CreateToggle({
 		Name = "Range Visualizer",
 		Function = function(callback)
@@ -1833,6 +1862,12 @@ runFunction(function()
 	local LongJump = {Enabled = false}
 	local LongJumpBoost = {Value = 1}
 	local LongJumpChange = true
+	local SpeedRaycast = RaycastParams.new()
+	SpeedRaycast.FilterType = Enum.RaycastFilterType.Blacklist
+	SpeedRaycast.RespectCanCollide = true
+	local LongJumpMethod = {Value = "Velocity"}
+	local LongJumpDuration = {Value = 2}
+	local endpos
 	LongJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = "LongJump", 
 		Function = function(callback)
@@ -1840,16 +1875,65 @@ runFunction(function()
 				if entityLibrary.isAlive and entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air then
 					entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 				end
-				RunLoops:BindToHeartbeat("LongJump", function() 
+				
+				local beganTick = tick()
+				local ylvl = entityLibrary.character.HumanoidRootPart.CFrame.Y +4
+				
+				RunLoops:BindToHeartbeat("LongJump", function(delta) 
 					if entityLibrary.isAlive then
-						if (entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall or entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Jumping) and entityLibrary.character.Humanoid.MoveDirection ~= Vector3.zero then
-							local velo = entityLibrary.character.Humanoid.MoveDirection * LongJumpBoost.Value
-							entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(velo.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, velo.Z)
-						end
-						local check = entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air
-						if LongJumpChange ~= check then 
-							if check then LongJump.ToggleButton(true) end
-							LongJumpChange = check
+						local movevec = (entityLibrary.character.Humanoid.MoveDirection).Unit
+						movevec = movevec == movevec and Vector3.new(movevec.X, 0, movevec.Z) or Vector3.zero
+						SpeedRaycast.FilterDescendantsInstances = {lplr.Character, game.Workspace.CurrentCamera}
+						
+						if LongJumpMethod.Value == "Velocity" then
+							if (entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall or entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Jumping) and entityLibrary.character.Humanoid.MoveDirection ~= Vector3.zero then
+								local velo = entityLibrary.character.Humanoid.MoveDirection * LongJumpBoost.Value
+								entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(velo.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, velo.Z)
+							end
+							local check = entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air
+							if LongJumpChange ~= check then 
+								if check then LongJump.ToggleButton(true) end
+								LongJumpChange = check
+							end
+						elseif LongJumpMethod.Value == "CFrame" then
+							if tick() - beganTick >= LongJumpDuration.Value then
+								LongJump.ToggleButton(false)
+							end
+							
+							local newpos = (movevec * (math.max(LongJumpBoost.Value - entityLibrary.character.Humanoid.WalkSpeed, 0) * delta))
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, newpos, SpeedRaycast)
+							if ray then newpos = (ray.Position - entityLibrary.character.HumanoidRootPart.Position) end
+							
+							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + newpos
+							entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(entityLibrary.character.HumanoidRootPart.CFrame.X,ylvl,entityLibrary.character.HumanoidRootPart.CFrame.Z)
+						elseif LongJumpMethod.Value == "FjAnticheat" then
+							if tick() - beganTick >= 0.7 then
+								entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(endpos.X,ylvl -5,endpos.Z)
+								if tick() - beganTick >= 1.5 then
+									LongJump.ToggleButton(false)
+								end
+								return
+							end
+
+							local newpos = (movevec * (math.max(30 - entityLibrary.character.Humanoid.WalkSpeed, 0) * delta))
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, newpos, SpeedRaycast)
+							if ray then newpos = (ray.Position - entityLibrary.character.HumanoidRootPart.Position) end
+
+							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + newpos
+							entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(entityLibrary.character.HumanoidRootPart.CFrame.X,ylvl,entityLibrary.character.HumanoidRootPart.CFrame.Z)
+							endpos = entityLibrary.character.HumanoidRootPart.CFrame
+						elseif LongJumpMethod.Value == "InfiniteAC" then
+							if tick() - beganTick >= 2 then
+								LongJump.ToggleButton(false)
+							end
+
+							local newpos = (movevec * (math.max(200 - entityLibrary.character.Humanoid.WalkSpeed, 0) * delta))
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, newpos, SpeedRaycast)
+							if ray then newpos = (ray.Position - entityLibrary.character.HumanoidRootPart.Position) end
+
+							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + newpos
+							entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(entityLibrary.character.HumanoidRootPart.CFrame.X,ylvl,entityLibrary.character.HumanoidRootPart.CFrame.Z)
+							endpos = entityLibrary.character.HumanoidRootPart.CFrame
 						end
 					end
 				end)
@@ -1859,13 +1943,30 @@ runFunction(function()
 			end
 		end
 	})
+	LongJumpMethod = LongJump.CreateDropdown({
+		Name = "Mode", 
+		List = {"Velocity", "CFrame", "FjAnticheat", "InfiniteAC"},
+		Function = function(val)
+			LongJumpDuration.Object.Visible = (val == "CFrame" and val ~= "FjAnticheat" and val ~= "InfiniteAC")
+			LongJumpBoost.Object.Visible = (val ~= "FjAnticheat" and val ~= "InfiniteAC")
+		end
+	})
 	LongJumpBoost = LongJump.CreateSlider({
 		Name = "Boost",
 		Min = 1,
 		Max = 150, 
 		Function = function(val) end
 	})
-
+	LongJumpDuration = LongJump.CreateSlider({
+		Name = "Duration",
+		Min = 1,
+		Max = 5, 
+		Function = function(val) end
+	})
+	
+	LongJumpDuration.Object.Visible = (LongJumpMethod.Value == "CFrame" and LongJumpMethod.Value ~= "FjAnticheat" and LongJumpMethod.Value ~= "InfiniteAC")
+	LongJumpBoost.Object.Visible = (LongJumpMethod.Value ~= "FjAnticheat" and LongJumpMethod.Value ~= "InfiniteAC")
+	
 	local HighJump = {Enabled = false}
 	local HighJumpMethod = {Value = "Toggle"}
 	local HighJumpMode = {Value = "Normal"}
@@ -2133,6 +2234,122 @@ runFunction(function()
 	})
 end)
 
+local hclone
+local Blink = {Enabled = false}
+runFunction(function()
+	Blink = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "Blink",
+		Function = function(callback)
+			if callback then 
+				
+				local hrp = entityLibrary.character.HumanoidRootPart
+				
+				hclone = hrp:Clone()
+				hclone.Parent = hrp
+
+				local constraint = Instance.new("WeldConstraint",hrp)
+				constraint.Part0 = hrp
+				constraint.Part1 = hclone
+			else
+				hclone:Destroy()
+			end
+		end,
+		HoverText = "Recoded to work"
+	})
+end)
+
+local DisablerMode = {Value = "AntiLagBack"}
+local Disabler = {Enabled = false}
+runFunction(function()
+	local speedMultiplier = {Value = 2}
+	local distanceUnblink = {Value = 5}
+	local lastHH = nil
+
+	Disabler = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "Disabler",
+		Function = function(callback)
+			if callback then 
+				local ltick = tick()
+				local lpos = lplr.Character.HumanoidRootPart.CFrame
+				local mlockTick = tick()
+				
+				local ylvl = lpos.Y +1
+				
+				RunLoops:BindToHeartbeat("Disabler",function()
+					if DisablerMode.Value == "InfinityAC" then
+						if lplr.Character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+							lplr.Character.HumanoidRootPart.Velocity = Vector3.new(lplr.Character.HumanoidRootPart.Velocity.X,25,lplr.Character.HumanoidRootPart.Velocity.Z)
+						end
+					end
+					if DisablerMode.Value == "InfinityAC2" then
+						if lastHH == nil then
+							lastHH = lplr.Character.Humanoid.HipHeight
+						end
+						lplr.Character.Humanoid.HipHeight = 4
+					end
+					if DisablerMode.Value == "AntiLagback" then
+						lplr.Character.HumanoidRootPart.CFrame = CFrame.new(lpos.X + lplr.Character.Humanoid.MoveDirection.X *speedMultiplier.Value,lpos.Y + lplr.Character.Humanoid.MoveDirection.Y,lpos.Z + lplr.Character.Humanoid.MoveDirection.Z *speedMultiplier.Value)
+						lpos = lplr.Character.HumanoidRootPart.CFrame
+					end
+					if DisablerMode.Value == "LagCompAbuse" then
+						if not Blink.Enabled and mlockTick < tick() then
+							Blink.ToggleButton(true)
+						end
+
+						if (lpos.Position - lplr.Character.HumanoidRootPart.Position).Magnitude >= distanceUnblink.Value then
+							lpos = lplr.Character.HumanoidRootPart.CFrame
+							Blink.ToggleButton(false)
+							mlockTick = tick() + 0.05
+						end
+					end
+					if DisablerMode.Value == "Partial_FjSpeed" then
+						if tick() - ltick >= 0.4 then
+							mlockTick = tick() +0.2
+
+							ltick = tick()
+						end
+						if mlockTick > tick() then
+							lplr.Character.HumanoidRootPart.CFrame = lpos
+						end
+						lpos = lplr.Character.HumanoidRootPart.CFrame
+					end
+				end)
+			else
+				RunLoops:UnbindFromHeartbeat("Disabler")
+				if lastHH ~= nil then
+					lplr.Character.Humanoid.HipHeight = lastHH
+					lastHH = nil
+				end
+			end
+		end
+	})
+	DisablerMode = Disabler.CreateDropdown({
+		Name = "Mode",
+		List = {"InfinityAC", "InfinityAC2", "AntiLagback", "LagCompAbuse", "Partial_FjSpeed"},
+		Function = function(val) 
+			speedMultiplier.Object.Visible = (val == "AntiLagback")
+			distanceUnblink.Object.Visible = (val == "LagCompAbuse")
+		end
+	})
+	speedMultiplier = Disabler.CreateSlider({
+		Name = "Speed Multiplier", 
+		Min = 1.3,
+		Max = 5, 
+		Default = 5,
+		Function = function(val) end
+	})
+	distanceUnblink = Disabler.CreateSlider({
+		Name = "Distance to unblink", 
+		Min = 1,
+		Max = 20, 
+		Default = 5,
+		Function = function(val) end
+	})
+
+	speedMultiplier.Object.Visible = (DisablerMode.Value == "AntiLagback")
+	distanceUnblink.Object.Visible = (DisablerMode.Value == "LagCompAbuse")
+end)
+
 runFunction(function()
 	local Speed = {Enabled = false}
 	local SpeedValue = {Value = 1}
@@ -2140,6 +2357,10 @@ runFunction(function()
 	local SpeedMoveMethod = {Value = "MoveDirection"}
 	local SpeedDelay = {Value = 0.7}
 	local SpeedPulseDuration = {Value = 100}
+	local DecellSpeed = {Value = 35}
+	local DecellDecay = {Value = 0.5}
+	local DecellDelay = {Value = 0.25}
+	local ResetDecelAt = {Value = 16}
 	local SpeedWallCheck = {Enabled = true}
 	local SpeedJump = {Enabled = false}
 	local SpeedJumpHeight = {Value = 20}
@@ -2157,8 +2378,10 @@ runFunction(function()
 	local s = 0
 	local a = 0
 	local d = 0
-
-	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B", "AntiCheat C", "AntiCheat D"}
+	local currentSpeed = SpeedValue.Value
+	local lastDegradeTick = tick()
+	
+	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B", "AntiCheat C", "AntiCheat D", "AntiCheat E"}
 	Speed = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = "Speed", 
 		Function = function(callback)
@@ -2240,11 +2463,37 @@ runFunction(function()
 							local pulsenum = (SpeedPulseDuration.Value / 100)
 							local newvelo = movevec * (SpeedValue.Value + (entityLibrary.character.Humanoid.WalkSpeed - SpeedValue.Value) * (1 - (math.max(pulsetick - tick(), 0)) / pulsenum))
 							entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(newvelo.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, newvelo.Z)
+						elseif SpeedMethod.Value == "Decell" then
+							
+							if tick() - lastDegradeTick >= DecellDelay.Value then
+								if currentSpeed < ResetDecelAt.Value then
+									currentSpeed = DecellSpeed.Value
+								end
+								
+								currentSpeed -= DecellDecay.Value
+								lastDegradeTick = tick()
+							end
+							
+							local newpos = (movevec * (math.max(currentSpeed - entityLibrary.character.Humanoid.WalkSpeed, 0) * delta))
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, newpos, SpeedRaycast)
+							if ray then newpos = (ray.Position - entityLibrary.character.HumanoidRootPart.Position) end
+							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + newpos
 						elseif SpeedMethod.Value == "WalkSpeed" then 
 							if oldWalkSpeed == nil then
 								oldWalkSpeed = entityLibrary.character.Humanoid.WalkSpeed
 							end
 							entityLibrary.character.Humanoid.WalkSpeed = SpeedValue.Value
+						elseif SpeedMethod.Value == "Fj_UseDisabler" then
+							DisablerMode.Value = "Partial_FjSpeed"
+							if Disabler.Enabled == false then
+								Disabler.ToggleButton(true)
+							end
+							
+							local newpos = (movevec * (math.max(32 - entityLibrary.character.Humanoid.WalkSpeed, 0) * delta))
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, newpos, SpeedRaycast)
+							if ray then newpos = (ray.Position - entityLibrary.character.HumanoidRootPart.Position) end
+							
+							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + newpos
 						end
 						if SpeedJump.Enabled and (SpeedJumpAlways.Enabled or KillauraNearTarget) then
 							if (entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air) and entityLibrary.character.Humanoid.MoveDirection ~= Vector3.zero then
@@ -2275,7 +2524,7 @@ runFunction(function()
 	})
 	SpeedMethod = Speed.CreateDropdown({
 		Name = "Mode", 
-		List = {"Velocity", "CFrame", "TP", "Pulse", "WalkSpeed"},
+		List = {"Velocity", "CFrame", "TP", "Pulse", "WalkSpeed", "Decell", "Fj_UseDisabler"},
 		Function = function(val)
 			if oldWalkSpeed then
 				entityLibrary.character.Humanoid.WalkSpeed = oldWalkSpeed
@@ -2285,6 +2534,10 @@ runFunction(function()
 			SpeedWallCheck.Object.Visible = val == "CFrame" or val == "TP"
 			SpeedPulseDuration.Object.Visible = val == "Pulse"
 			SpeedAnimation.Object.Visible = val == "Velocity"
+			ResetDecelAt.Object.Visible = val == "Decell"
+			DecellDelay.Object.Visible = val == "Decell"
+			DecellSpeed.Object.Visible = val == "Decell"
+			SpeedValue.Object.Visible = val ~= "Decell"
 		end
 	})
 	SpeedMoveMethod = Speed.CreateDropdown({
@@ -2307,6 +2560,42 @@ runFunction(function()
 		end,
 		Default = 7,
 		Double = 10
+	})
+	ResetDecelAt = Speed.CreateSlider({
+		Name = "Lowest speed", 
+		Min = 1,
+		Max = 50, 
+		Function = function(val)
+			SpeedDelayTick = tick() + (val / 10)
+		end,
+		Default = 16,
+	})
+	DecellDelay = Speed.CreateSlider({
+		Name = "Degrade delay", 
+		Min = 0.01,
+		Max = 1, 
+		Function = function(val)
+			SpeedDelayTick = tick() + (val / 10)
+		end,
+		Default = 0.25,
+	})
+	DecellSpeed = Speed.CreateSlider({
+		Name = "Max speed", 
+		Min = 8,
+		Max = 100, 
+		Function = function(val)
+			SpeedDelayTick = tick() + (val / 10)
+		end,
+		Default = 35,
+	})
+	DecellDecay = Speed.CreateSlider({
+		Name = "Speed Decay", 
+		Min = 8,
+		Max = 100, 
+		Function = function(val)
+			SpeedDelayTick = tick() + (val / 10)
+		end,
+		Default = 35,
 	})
 	SpeedPulseDuration = Speed.CreateSlider({
 		Name = "Pulse Duration",
@@ -2352,6 +2641,15 @@ runFunction(function()
 		Name = "Slowdown Anim",
 		Function = function() end
 	})
+	
+	SpeedDelay.Object.Visible = SpeedMethod.Value == "TP" or SpeedMethod.Value == "Pulse"
+	SpeedWallCheck.Object.Visible = SpeedMethod.Value == "CFrame" or SpeedMethod.Value == "TP"
+	SpeedPulseDuration.Object.Visible = SpeedMethod.Value == "Pulse"
+	SpeedAnimation.Object.Visible = SpeedMethod.Value == "Velocity"
+	ResetDecelAt.Object.Visible = SpeedMethod.Value == "Decell"
+	DecellDelay.Object.Visible = SpeedMethod.Value == "Decell"
+	DecellSpeed.Object.Visible = SpeedMethod.Value == "Decell"
+	SpeedValue.Object.Visible = SpeedMethod.Value ~= "Decell"
 end)
 
 runFunction(function()
@@ -2436,98 +2734,98 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local ArrowsFolder = Instance.new("Folder")
-    ArrowsFolder.Name = "ArrowsFolder"
-    ArrowsFolder.Parent = GuiLibrary.MainGui
-    local ArrowsFolderTable = {}
-    local ArrowsColor = {Value = 0.44}
-    local ArrowsTeammate = {Enabled = true}
+	local ArrowsFolder = Instance.new("Folder")
+	ArrowsFolder.Name = "ArrowsFolder"
+	ArrowsFolder.Parent = GuiLibrary.MainGui
+	local ArrowsFolderTable = {}
+	local ArrowsColor = {Value = 0.44}
+	local ArrowsTeammate = {Enabled = true}
 
-    local arrowAddFunction = function(plr)
-        if ArrowsTeammate.Enabled and (not plr.Targetable) and (not plr.Friend) then return end
-        local arrowObject = Instance.new("ImageLabel")
-        arrowObject.BackgroundTransparency = 1
-        arrowObject.BorderSizePixel = 0
-        arrowObject.Size = UDim2.new(0, 256, 0, 256)
-        arrowObject.AnchorPoint = Vector2.new(0.5, 0.5)
-        arrowObject.Position = UDim2.new(0.5, 0, 0.5, 0)
-        arrowObject.Visible = false
-        arrowObject.Image = downloadVapeAsset("vape/assets/ArrowIndicator.png")
+	local arrowAddFunction = function(plr)
+		if ArrowsTeammate.Enabled and (not plr.Targetable) and (not plr.Friend) then return end
+		local arrowObject = Instance.new("ImageLabel")
+		arrowObject.BackgroundTransparency = 1
+		arrowObject.BorderSizePixel = 0
+		arrowObject.Size = UDim2.new(0, 256, 0, 256)
+		arrowObject.AnchorPoint = Vector2.new(0.5, 0.5)
+		arrowObject.Position = UDim2.new(0.5, 0, 0.5, 0)
+		arrowObject.Visible = false
+		arrowObject.Image = downloadVapeAsset("vape/assets/ArrowIndicator.png")
 		arrowObject.ImageColor3 = getPlayerColor(plr.Player) or Color3.fromHSV(ArrowsColor.Hue, ArrowsColor.Sat, ArrowsColor.Value)
-        arrowObject.Name = plr.Player.Name
-        arrowObject.Parent = ArrowsFolder
-        ArrowsFolderTable[plr.Player] = {entity = plr, Main = arrowObject}
-    end
+		arrowObject.Name = plr.Player.Name
+		arrowObject.Parent = ArrowsFolder
+		ArrowsFolderTable[plr.Player] = {entity = plr, Main = arrowObject}
+	end
 
-    local arrowRemoveFunction = function(ent)
-        local v = ArrowsFolderTable[ent]
-        ArrowsFolderTable[ent] = nil
-        if v then v.Main:Destroy() end
-    end
+	local arrowRemoveFunction = function(ent)
+		local v = ArrowsFolderTable[ent]
+		ArrowsFolderTable[ent] = nil
+		if v then v.Main:Destroy() end
+	end
 
-    local arrowColorFunction = function(hue, sat, val)
-        local color = Color3.fromHSV(hue, sat, val)
-        for i,v in pairs(ArrowsFolderTable) do 
-            v.Main.ImageColor3 = getPlayerColor(v.entity.Player) or color
-        end
-    end
+	local arrowColorFunction = function(hue, sat, val)
+		local color = Color3.fromHSV(hue, sat, val)
+		for i,v in pairs(ArrowsFolderTable) do 
+			v.Main.ImageColor3 = getPlayerColor(v.entity.Player) or color
+		end
+	end
 
-    local arrowLoopFunction = function()
-        for i,v in pairs(ArrowsFolderTable) do 
-            local rootPos, rootVis = worldtoscreenpoint(v.entity.RootPart.Position)
-            if rootVis then 
-                v.Main.Visible = false
-                continue
-            end
-            local camcframeflat = CFrame.new(gameCamera.CFrame.p, gameCamera.CFrame.p + gameCamera.CFrame.lookVector * Vector3.new(1, 0, 1))
-            local pointRelativeToCamera = camcframeflat:pointToObjectSpace(v.entity.RootPart.Position)
-            local unitRelativeVector = (pointRelativeToCamera * Vector3.new(1, 0, 1)).unit
-            local rotation = math.atan2(unitRelativeVector.Z, unitRelativeVector.X)
-            v.Main.Visible = true
-            v.Main.Rotation = math.deg(rotation)
-        end
-    end
+	local arrowLoopFunction = function()
+		for i,v in pairs(ArrowsFolderTable) do 
+			local rootPos, rootVis = worldtoscreenpoint(v.entity.RootPart.Position)
+			if rootVis then 
+				v.Main.Visible = false
+				continue
+			end
+			local camcframeflat = CFrame.new(gameCamera.CFrame.p, gameCamera.CFrame.p + gameCamera.CFrame.lookVector * Vector3.new(1, 0, 1))
+			local pointRelativeToCamera = camcframeflat:pointToObjectSpace(v.entity.RootPart.Position)
+			local unitRelativeVector = (pointRelativeToCamera * Vector3.new(1, 0, 1)).unit
+			local rotation = math.atan2(unitRelativeVector.Z, unitRelativeVector.X)
+			v.Main.Visible = true
+			v.Main.Rotation = math.deg(rotation)
+		end
+	end
 
-    local Arrows = {Enabled = false}
+	local Arrows = {Enabled = false}
 	Arrows = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = "Arrows", 
-        Function = function(callback) 
-            if callback then
+		Name = "Arrows", 
+		Function = function(callback) 
+			if callback then
 				table.insert(Arrows.Connections, entityLibrary.entityRemovedEvent:Connect(arrowRemoveFunction))
 				for i,v in pairs(entityLibrary.entityList) do 
-                    if ArrowsFolderTable[v.Player] then arrowRemoveFunction(v.Player) end
-                    arrowAddFunction(v)
-                end
-                table.insert(Arrows.Connections, entityLibrary.entityAddedEvent:Connect(function(ent)
-                    if ArrowsFolderTable[ent.Player] then arrowRemoveFunction(ent.Player) end
-                    arrowAddFunction(ent)
-                end))
+					if ArrowsFolderTable[v.Player] then arrowRemoveFunction(v.Player) end
+					arrowAddFunction(v)
+				end
+				table.insert(Arrows.Connections, entityLibrary.entityAddedEvent:Connect(function(ent)
+					if ArrowsFolderTable[ent.Player] then arrowRemoveFunction(ent.Player) end
+					arrowAddFunction(ent)
+				end))
 				table.insert(Arrows.Connections, GuiLibrary.ObjectsThatCanBeSaved.FriendsListTextCircleList.Api.FriendColorRefresh.Event:Connect(function()
-                    arrowColorFunction(ESPColor.Hue, ESPColor.Sat, ESPColor.Value)
-                end))
+					arrowColorFunction(ESPColor.Hue, ESPColor.Sat, ESPColor.Value)
+				end))
 				RunLoops:BindToRenderStep("Arrows", arrowLoopFunction)
-            else
-                RunLoops:UnbindFromRenderStep("Arrows") 
+			else
+				RunLoops:UnbindFromRenderStep("Arrows") 
 				for i,v in pairs(ArrowsFolderTable) do 
-                    arrowRemoveFunction(i)
-                end
-            end
-        end, 
-        HoverText = "Draws arrows on screen when entities\nare out of your field of view."
-    })
-    ArrowsColor = Arrows.CreateColorSlider({
-        Name = "Player Color", 
-        Function = function(hue, sat, val) 
+					arrowRemoveFunction(i)
+				end
+			end
+		end, 
+		HoverText = "Draws arrows on screen when entities\nare out of your field of view."
+	})
+	ArrowsColor = Arrows.CreateColorSlider({
+		Name = "Player Color", 
+		Function = function(hue, sat, val) 
 			if Arrows.Enabled then 
 				arrowColorFunction(hue, sat, val)
 			end
 		end,
-    })
-    ArrowsTeammate = Arrows.CreateToggle({
-        Name = "Teammate",
-        Function = function() end,
-        Default = true
-    })
+	})
+	ArrowsTeammate = Arrows.CreateToggle({
+		Name = "Teammate",
+		Function = function() end,
+		Default = true
+	})
 end)
 
 
@@ -2535,7 +2833,7 @@ runFunction(function()
 	local Disguise = {Enabled = false}
 	local DisguiseId = {Value = ""}
 	local DisguiseDescription
-	
+
 	local function Disguisechar(char)
 		task.spawn(function()
 			if not char then return end
@@ -3432,9 +3730,9 @@ runFunction(function()
 	end
 
 	local function removeTags(str)
-        str = str:gsub("<br%s*/>", "\n")
-        return (str:gsub("<[^<>]->", ""))
-    end
+		str = str:gsub("<br%s*/>", "\n")
+		return (str:gsub("<[^<>]->", ""))
+	end
 
 	local NameTagsFolder = Instance.new("Folder")
 	NameTagsFolder.Name = "NameTagsFolder"
@@ -4239,6 +4537,28 @@ runFunction(function()
 	}) 
 end)
 
+local spoofedPing = {Value = 10}
+
+runFunction(function()
+	local PingSpoof = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+		Name = "PingSpoof", 
+		Function = function(callback)
+			if callback then
+				settings().Network.IncomingReplicationLag = spoofedPing.Value /1000
+			else
+				settings().Network.IncomingReplicationLag = 0
+			end
+		end
+	}) 
+	spoofedPing = PingSpoof.CreateSlider({
+		Name = "PingSpoofed",
+		Min = 1,
+		Max = 5000,
+		Default = 500,
+		Function = function() end
+	})
+end)
+
 runFunction(function()
 	local ChatSpammer = {Enabled = false}
 	local ChatSpammerDelay = {Value = 10}
@@ -4841,7 +5161,7 @@ runFunction(function()
 	local reporttableexact = {
 		L = "Bullying",
 	}
-	
+
 
 	local function findreport(msg)
 		local checkstr = removerepeat(msg:gsub("%W+", ""):lower())
@@ -5177,26 +5497,178 @@ runFunction(function()
 	})
 end)
 
+local GodMode = {Enabled = false}
 runFunction(function()
-	local Blink = {Enabled = false}
-	Blink = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = "Blink",
+	GodMode = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "PartialGodMode",
 		Function = function(callback)
 			if callback then 
-				if sethiddenproperty then
-					RunLoops:BindToHeartbeat("Blink", function()
-						if entityLibrary.isAlive then 
-							sethiddenproperty(entityLibrary.character.HumanoidRootPart, "NetworkIsSleeping", true)
+				GodMode.ToggleButton(false)
+				local plr = game.Players.LocalPlayer
+				local char = plr.Character
+				local hum = char.Humanoid
+				local cam = game.Workspace.CurrentCamera
+
+				local cloned = hum:Clone()
+
+				char.Animate.Enabled = false
+
+				cloned:SetStateEnabled(Enum.HumanoidStateType.Dead,false)
+				cloned:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,false)
+
+				cloned.Parent = char
+				hum.Parent = game
+				cam.CameraSubject = cloned
+
+				while task.wait() do
+					cloned.Health = cloned.MaxHealth
+					if cloned.FloorMaterial ~= Enum.Material.Air then
+						if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+							char.HumanoidRootPart.Velocity = Vector3.new(0,50,0)
 						end
-					end)
-				else
-					warningNotification("Blink", "missing function", 5)
-					Blink.ToggleButton(false)
+					end
 				end
-			else
-				RunLoops:UnbindFromHeartbeat("Blink")
 			end
 		end
+	})
+end)
+
+runFunction(function()
+	local InfiniteJump = {Enabled = false}
+	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "InfiniteJump",
+		Function = function(callback)
+			if callback then 
+				
+				local lJumpTick = tick()
+				
+				RunLoops:BindToHeartbeat("InfiniteJump",function()
+					if tick() - lJumpTick >= 0.1 and inputService:IsKeyDown(Enum.KeyCode.Space) and entityLibrary.character.Humanoid.FloorMaterial == Enum.Material.Air then
+						entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(entityLibrary.character.HumanoidRootPart.Velocity.X,50,entityLibrary.character.HumanoidRootPart.Velocity.Z)
+					end
+				end)
+			else
+				RunLoops:UnbindFromHeartbeat("InfiniteJump")
+			end
+		end
+	})
+end)
+
+local cancelNextDeathTp = false
+runFunction(function()
+	local position = entityLibrary.character.HumanoidRootPart.CFrame
+	local lground = entityLibrary.character.HumanoidRootPart.CFrame
+	local setPos = false
+	local died = false
+	local DeathTpMode = {Value = "Instant"}
+
+	local DeathTP = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "DeathTP", 
+		Function = function(callback)
+			if callback then
+				RunLoops:BindToHeartbeat("DTP",function()
+					if entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Dead and setPos == false then
+						if entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+							position = entityLibrary.character.HumanoidRootPart.CFrame
+							setPos = true
+							died = true
+						else
+							position = lground
+							setPos = true
+							died = true
+						end
+					end
+
+					if entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+						lground = entityLibrary.character.HumanoidRootPart.CFrame
+					end
+
+					if entityLibrary.character.Humanoid:GetState() ~= Enum.HumanoidStateType.Dead and died == true then
+						if not entityLibrary.character.HumanoidRootPart.Parent then
+							return
+						end
+						died = false
+						setPos = false
+
+						if cancelNextDeathTp == true then
+							return
+						end
+						
+						if DeathTpMode.Value == "Bedwars" then
+							entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(entityLibrary.character.HumanoidRootPart.CFrame.X,entityLibrary.character.HumanoidRootPart.CFrame.Y,entityLibrary.character.HumanoidRootPart.CFrame.Z)
+							task.wait(0.1)
+							local increment = 0.1
+
+							for i=0,1,increment do
+								local pos = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y +60,position.Z),i)
+
+								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y +60,position.Z),i)
+								task.wait(0.1)
+
+								if i > 1 then
+									break
+								end
+							end
+						elseif DeathTpMode.Value == "Instant" then
+							repeat task.wait(0.1) until game.Workspace:FindFirstChild(lplr.Name):FindFirstChild("HumanoidRootPart")
+							entityLibrary.character.HumanoidRootPart.CFrame = position
+						elseif DeathTpMode.Value == "Fast" then
+							repeat task.wait(0.1) until game.Workspace:FindFirstChild(lplr.Name)
+							local increment = 0.01
+
+							for i=0,1,increment do
+								local pos = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y +10,position.Z),i)
+
+								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y,position.Z),i)
+								task.wait()
+
+								if i > 1 then
+									break
+								end
+							end
+						elseif DeathTpMode.Value == "slow (A)" then
+							repeat task.wait(0.1) until game.Workspace:FindFirstChild(lplr.Name)
+							local increment = 0.01
+
+							for i=0,1,increment do
+								local pos = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y +10,position.Z),i)
+
+								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y,position.Z),i)
+								task.wait(0.1)
+
+								if i > 1 then
+									break
+								end
+							end
+						elseif DeathTpMode.Value == "slow (B)" then
+							repeat task.wait(0.1) until game.Workspace:FindFirstChild(lplr.Name)
+							local increment = 0.2
+
+							for i=0,1,increment do
+								local pos = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y +10,position.Z),i)
+
+								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y,position.Z),i)
+								task.wait(0.5)
+
+								if i > 1 then
+									entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame:Lerp(CFrame.new(position.X,position.Y,position.Z),1)
+									break
+								end
+							end
+						end
+						warningNotification("DeathTP","Teleported",5)
+					end
+				end)
+			else
+				RunLoops:UnbindFromHeartbeat("DTP")
+			end
+		end,
+		HoverText = "Teleports back to where you died when you respawn."
+	})
+	DeathTpMode = DeathTP.CreateDropdown({
+		Name = "Mode",
+		List = {"Instant","Bedwars","Fast","slow (A)","slow (B)"},
+		Function = function(val)  end
 	})
 end)
 
@@ -5217,10 +5689,10 @@ runFunction(function()
 					end
 					local anim = Instance.new("Animation")
 					local suc, id = pcall(function() return string.match(game:GetObjects("rbxassetid://"..AnimationPlayerBox.Value)[1].AnimationId, "%?id=(%d+)") end)
-                    if not suc then
-                        id = AnimationPlayerBox.Value
-                    end
-                    anim.AnimationId = "rbxassetid://"..id
+					if not suc then
+						id = AnimationPlayerBox.Value
+					end
+					anim.AnimationId = "rbxassetid://"..id
 					local suc, res = pcall(function() playedanim = entityLibrary.character.Humanoid.Animator:LoadAnimation(anim) end)
 					if suc then
 						playedanim.Priority = Enum.AnimationPriority.Action4
@@ -5248,10 +5720,10 @@ runFunction(function()
 					end
 					local anim = Instance.new("Animation")
 					local suc, id = pcall(function() return string.match(game:GetObjects("rbxassetid://"..AnimationPlayerBox.Value)[1].AnimationId, "%?id=(%d+)") end)
-                    if not suc then
-                        id = AnimationPlayerBox.Value
-                    end
-                    anim.AnimationId = "rbxassetid://"..id
+					if not suc then
+						id = AnimationPlayerBox.Value
+					end
+					anim.AnimationId = "rbxassetid://"..id
 					local suc, res = pcall(function() playedanim = entityLibrary.character.Humanoid.Animator:LoadAnimation(anim) end)
 					if suc then
 						playedanim.Priority = Enum.AnimationPriority.Action4
@@ -5716,7 +6188,7 @@ runFunction(function()
 			return true
 		end
 	end
-	
+
 
 	Disabler = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
 		Name = "ClientKickDisabler",
@@ -5796,7 +6268,6 @@ runFunction(function()
 	ReachCorner.Parent = FPSLabel
 end)
 
-
 runFunction(function()
 	local Ping = {}
 	local PingLabel
@@ -5825,6 +6296,60 @@ runFunction(function()
 	local PingCorner = Instance.new("UICorner")
 	PingCorner.CornerRadius = UDim.new(0, 4)
 	PingCorner.Parent = PingLabel
+end)
+
+runFunction(function()
+	local nofallMode = {Value = "GroundSpoof"}
+	local lground = lplr.Character.HumanoidRootPart.CFrame
+	local blinked = false
+
+	local Nofall = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+		Name = "Nofall", 
+		Function = function(callback)
+			if callback then
+				RunLoops:BindToRenderStep("Nofall",function()
+					if nofallMode.Value == "Blink" then
+						local rparam = RaycastParams.new()
+						rparam.IgnoreWater = false
+						rparam.FilterDescendantsInstances = {lplr.Character}
+						rparam.RespectCanCollide = false
+
+						if workspace:Raycast(lplr.Character.HumanoidRootPart.Position,Vector3.new(0,-12,0),rparam) ~= nil then
+							lground = lplr.Character.HumanoidRootPart.CFrame
+
+							if blinked == true then
+								warningNotification("No fall","Unblinked.",10)
+								Blink.ToggleButton(false)
+								blinked = false
+							end
+						elseif blinked == false then
+							blinked = true
+							lplr.Character.HumanoidRootPart.CFrame = lground
+							warningNotification("No fall","Blinked",10)
+							Blink.ToggleButton(true)
+						end
+					elseif nofallMode.Value == "GroundSpoof" then
+						if game.Workspace:FindFirstChild("NofallPart!42!4$!") then
+							game.Workspace:FindFirstChild("NofallPart!42!4$!"):Destroy()
+						end
+						
+						local part = Instance.new("Part",game.Workspace)
+						part.CFrame = CFrame.new(lplr.Character.HumanoidRootPart.CFrame.X,lplr.Character.HumanoidRootPart.CFrame.Y -4.5,lplr.Character.HumanoidRootPart.CFrame.Z)
+						part.Anchored = true
+						part.Transparency = 1
+						part.Name = "NofallPart!42!4$!"
+					end
+				end)
+			else
+				RunLoops:UnbindFromRenderStep("Nofall")
+			end
+		end
+	}) 
+	nofallMode = Nofall.CreateDropdown({
+		Name = "Mode",
+		List = {"GroundSpoof", "Blink"},
+		Function = function() end
+	})
 end)
 
 runFunction(function()
